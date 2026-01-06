@@ -1,0 +1,31 @@
+{
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": [
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/constants",
+        "${workspaceFolder}/data",
+        "${workspaceFolder}/graphics",
+        "${workspaceFolder}",
+        "/usr/include",
+        "/usr/local/include"
+      ],
+      "defines": [],
+      "compilerPath": "/usr/bin/gcc",
+      "intelliSenseMode": "gcc-x64",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "browse": {
+        "path": [
+          "${workspaceFolder}/src",
+          "${workspaceFolder}/include",
+          "${workspaceFolder}/constants"
+        ],
+        "limitSymbolsToIncludedHeaders": true
+      }
+    }
+  ],
+  "version": 4
+}
