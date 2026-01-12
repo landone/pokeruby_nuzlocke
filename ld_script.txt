@@ -39,8 +39,12 @@ SECTIONS {
     .text :
     ALIGN(4)
     {
+
         src/crt0.o(.text);
         src/main.o(.text);
+
+        src/custom/Custom.o(.text);
+
         src/sprite.o(.text);
         src/text.o(.text);
         src/string_util.o(.text);
@@ -467,6 +471,9 @@ SECTIONS {
     ALIGN(4)
     {
         src/main.o(.rodata);
+
+        src/custom/Custom.o(.rodata);
+
         src/sprite.o(.rodata);
         . += 0x8; /* Why the gap? */
         src/text.o(.rodata);

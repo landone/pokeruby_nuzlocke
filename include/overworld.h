@@ -46,6 +46,7 @@ void Overworld_SetObjEventTemplateMovementType(u8, u8);
 struct MapHeader * const Overworld_GetMapHeaderByGroupAndId(u16 mapGroup, u16 mapNum);
 struct MapHeader * const GetDestinationWarpMapHeader(void);
 // LoadSaveblockMapHeader
+void SetWarpData(struct WarpData *warp, s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y);
 void WarpIntoMap(void);
 void Overworld_SetWarpDestination(s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y);
 void warp1_set_2(s8 mapGroup, s8 mapNum, s8 warpId);

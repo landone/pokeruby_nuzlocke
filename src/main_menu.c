@@ -25,6 +25,8 @@
 #include "scanline_effect.h"
 #include "ewram.h"
 
+#include "custom/Custom.h"
+
 #define BirchSpeechUpdateWindowText() ((u8)Menu_UpdateWindowTextOverrideLineLength(24))
 
 extern struct PaletteFadeControl gPaletteFade;
@@ -121,6 +123,8 @@ static s8 GenderMenuProcessInput(void);
 static void CreateNameMenu(u8 left, u8 top);
 static s8 NameMenuProcessInput(void);
 static void SetPresetPlayerName(u8 index);
+
+void CB2_StartGameImmediately(void);
 
 static const u16 gUnknown_081E764C[][16] =
 {
@@ -570,7 +574,8 @@ void Task_MainMenuPressedA(u8 taskId)
     default:
         gPlttBufferUnfaded[0] = 0;
         gPlttBufferFaded[0] = 0;
-        gTasks[taskId].func = Task_NewGameSpeech1;
+        SetMainCallback2(CB2_StartGameImmediately);
+        DestroyTask(taskId);
         break;
     case CONTINUE:
         gPlttBufferUnfaded[0] = 0;
@@ -1318,6 +1323,13 @@ static void Task_NewGameSpeech33(u8 taskId)
         SetMainCallback2(CB2_NewGame);
         DestroyTask(taskId);
     }
+}
+
+void CB2_StartGameImmediately(void) {
+
+    CB2_NewGame();
+    OnNewGame();
+
 }
 
 // Re-initializes graphics state after running the naming screen

@@ -134,6 +134,7 @@ else
 LIBDIRS := -L $(shell dirname $(shell $(MODERNCC) --print-file-name=libgcc.a)) -L $(shell dirname $(shell $(MODERNCC) --print-file-name=libc.a))
 endif
 LDFLAGS := $(LIBDIRS:%=-L %) -lgcc -lc
+LDFLAGS += --print-gc-sections
 
 ifeq ($(MODERN),0)
 LD_SCRIPT := $(BUILD_DIR)/ld_script.ld

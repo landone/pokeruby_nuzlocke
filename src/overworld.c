@@ -374,7 +374,7 @@ static void ApplyCurrentWarp(void)
     gFixedHoleWarp = sDummyWarpData;
 }
 
-static void SetWarpData(struct WarpData *warp, s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y)
+void SetWarpData(struct WarpData *warp, s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y)
 {
     warp->mapGroup = mapGroup;
     warp->mapNum = mapNum;
@@ -1279,7 +1279,7 @@ void CB2_NewGame(void)
     PlayTimeCounter_Start();
     ScriptContext1_Init();
     ScriptContext2_Disable();
-    gFieldCallback = ExecuteTruckSequence;
+    //gFieldCallback = ExecuteTruckSequence;
     do_load_map_stuff_loop(&gMain.state);
     SetFieldVBlankCallback();
     SetMainCallback1(CB1_Overworld);
