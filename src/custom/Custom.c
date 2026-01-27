@@ -18,6 +18,7 @@ void SetFlags() {
     FlagSet(FLAG_SYS_POKEDEX_GET);
     FlagSet(FLAG_SYS_POKEMON_GET);
     FlagSet(FLAG_SYS_POKENAV_GET);
+    FlagSet(FLAG_CUSTOM_DEBUG_MODE);
 
     //Give all badges
     for (tempFlag = FLAG_BADGE01_GET; tempFlag <= FLAG_BADGE08_GET; tempFlag++)
@@ -30,16 +31,27 @@ void SetFlags() {
 }
 
 void GiveFly(struct Pokemon* mon) { SetMonMoveSlot(mon, MOVE_FLY, 0); }
-void GiveSurf(struct Pokemon* mon) { SetMonMoveSlot(mon, MOVE_SURF, 0); }
+void GiveWaterHMs(struct Pokemon* mon) {
+    SetMonMoveSlot(mon, MOVE_SURF, 0);
+    SetMonMoveSlot(mon, MOVE_WATERFALL, 1);
+    SetMonMoveSlot(mon, MOVE_DIVE, 2);
+}
+void GiveFlash(struct Pokemon* mon) { SetMonMoveSlot(mon, MOVE_FLASH, 0); }
+void GivePhysicalHMs(struct Pokemon* mon) {
+    SetMonMoveSlot(mon, MOVE_CUT, 0);
+    SetMonMoveSlot(mon, MOVE_ROCK_SMASH, 1);
+    SetMonMoveSlot(mon, MOVE_STRENGTH, 2);
+}
 
 void OnNewGame() {
 
-    FormatAscii("Wan!", gSaveBlock2.playerName, 7);
+    const char* playerName = "Wan!";
     SetFlags();
+    FormatAscii(playerName, gSaveBlock2.playerName, 7);
     GiveMon(SPECIES_ZAPDOS, 60, GiveFly);
-    GiveMon(SPECIES_ARTICUNO, 60, GiveSurf);
-    GiveMon(SPECIES_MOLTRES, 60, NULL);
-    GiveMon(SPECIES_LUGIA, 60, NULL);
+    GiveMon(SPECIES_ARTICUNO, 60, GiveWaterHMs);
+    GiveMon(SPECIES_MOLTRES, 60, GiveFlash);
+    GiveMon(SPECIES_LUGIA, 60, GivePhysicalHMs);
 
     /*Overworld_SetWarpDestination(MAP_GROUP(MAP_ABANDONED_SHIP_CAPTAINS_OFFICE), MAP_NUM(MAP_ABANDONED_SHIP_CAPTAINS_OFFICE), -1, -1, -1);
     WarpIntoMap();

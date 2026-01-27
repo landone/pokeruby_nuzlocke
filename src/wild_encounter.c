@@ -436,7 +436,9 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
 {
     u16 headerNum;
     struct Roamer *roamer;
-
+    if (FlagGet(FLAG_CUSTOM_REPEL_INFINITE) == TRUE) {
+        return FALSE;
+    }
     if (gWildEncountersDisabled == TRUE)
         return 0;
     else

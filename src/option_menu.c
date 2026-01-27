@@ -9,6 +9,9 @@
 #include "strings2.h"
 #include "task.h"
 
+#include "event_data.h"
+#include "custom/Custom.h"
+
 extern void SetPokemonCryStereo(u32 val);
 
 // Menu items
@@ -162,7 +165,11 @@ void CB2_InitOptionMenu(void)
         Menu_PrintText(gSystemText_OptionMenu,  4,  1);
 
         Menu_PrintText(gSystemText_TextSpeed,   4,  5);
-        Menu_PrintText(gSystemText_BattleScene, 4,  7);
+        if (FlagGet(FLAG_CUSTOM_DEBUG_MODE) == TRUE) {
+            const u8 buffer[] =  _("{PALETTE 9}Infi-Repel$");
+            gTasks[taskId].tOptBattleScene = !FlagGet(FLAG_CUSTOM_REPEL_INFINITE);
+            Menu_PrintText(buffer, 4,  7);
+        }
         Menu_PrintText(gSystemText_BattleStyle, 4,  9);
         Menu_PrintText(gSystemText_Sound,       4, 11);
         Menu_PrintText(gSystemText_ButtonMode,  4, 13);
@@ -257,7 +264,18 @@ static void Task_OptionMenuProcessInput(u8 taskId)
 static void Task_OptionMenuSave(u8 taskId)
 {
     gSaveBlock2.optionsTextSpeed       = gTasks[taskId].tOptTextSpeed;
-    gSaveBlock2.optionsBattleSceneOff  = gTasks[taskId].tOptBattleScene;
+    
+    if (FlagGet(FLAG_CUSTOM_DEBUG_MODE) == TRUE) {
+        if (gTasks[taskId].tOptBattleScene == TRUE) {
+            FlagClear(FLAG_CUSTOM_REPEL_INFINITE);
+        } else {
+            FlagSet(FLAG_CUSTOM_REPEL_INFINITE);
+        }
+    }
+    else {
+        gSaveBlock2.optionsBattleSceneOff  = gTasks[taskId].tOptBattleScene;
+    }
+    
     gSaveBlock2.optionsBattleStyle     = gTasks[taskId].tOptBattleStyle;
     gSaveBlock2.optionsSound           = gTasks[taskId].tOptSound;
     gSaveBlock2.optionsButtonMode      = gTasks[taskId].tOptButtonMode;
