@@ -29,6 +29,8 @@
 #include "ewram.h"
 #include "util.h"
 
+#include "event_data.h"
+
 // TODO: put this into battle_controllers.h
 
 #define RET_VALUE_LEVELLED_UP   11
@@ -1038,7 +1040,11 @@ static const u8 sBallCatchBonuses[] =
 static void atk00_attackcanceler(void)
 {
     s32 i;
-
+    if (FlagGet(FLAG_CUSTOM_GOD_MODE) == TRUE && GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT) {
+        gMoveResultFlags |= MOVE_RESULT_NO_EFFECT;
+        gBattlescriptCurrInstr++;
+        return;
+    }
     if (gBattleOutcome != 0)
     {
         gCurrentActionFuncId = B_ACTION_FINISHED;
@@ -2059,6 +2065,7 @@ static void atk0C_datahpupdate(void)
                     }
                 }
             }
+
             gHitMarker &= ~(HITMARKER_x100000);
             BtlController_EmitSetMonData(0, REQUEST_HP_BATTLE, 0, 2, &gBattleMons[gActiveBattler].hp);
             MarkBattlerForControllerExec(gActiveBattler);

@@ -40,6 +40,17 @@ typedef struct {
     u16 flag;
 } OptionData;
 
+const OptionData gOptionData[] = {
+    {
+        .title = "Infinite Repel",
+        .flag = FLAG_CUSTOM_REPEL_INFINITE,
+    },
+    {
+        .title = "God Mode",
+        .flag = FLAG_CUSTOM_GOD_MODE,
+    },
+};
+
 const u16 gUnknown_0839F5FC[] = INCBIN_U16("graphics/misc/option_menu_text.gbapal");
 // note: this is only used in the Japanese release
 const u8 gUnknown_0839F63C[] = INCBIN_U8("graphics/misc/option_menu_equals_sign.4bpp");
@@ -70,13 +81,6 @@ static void SetFlag(u16 flag, bool8 value) {
         FlagClear(flag);
     }
 }
-
-const OptionData gOptionData[] = {
-    {
-        .title = "Infinite Repel",
-        .flag = FLAG_CUSTOM_REPEL_INFINITE,
-    },
-};
 
 static void MainCB(void)
 {
