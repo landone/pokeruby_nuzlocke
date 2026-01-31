@@ -6,6 +6,8 @@
 #include "string_util.h"
 #include "graphics.h"
 
+#include "event_data.h"
+
 #define SPRITE_TAG_MONEY (0x2722)
 
 extern u16 gSpecialVar_0x8005;
@@ -56,6 +58,9 @@ const struct CompressedSpritePalette gUnknown_083CF58C[] = {gMenuMoneyPal, SPRIT
 
 bool8 IsEnoughMoney(u32 budget, u32 cost)
 {
+    if (FlagGet(FLAG_CUSTOM_MONEY_INFINITE) == TRUE) {
+        return TRUE;
+    }
     if (budget >= cost)
     {
         return TRUE;
@@ -66,6 +71,9 @@ bool8 IsEnoughMoney(u32 budget, u32 cost)
 
 void AddMoney(u32 *arg0, u32 arg1)
 {
+    if (FlagGet(FLAG_CUSTOM_MONEY_INFINITE) == TRUE) {
+        return;
+    }
     if (*arg0 > *arg0 + arg1)
     {
         *arg0 = 999999;
@@ -81,6 +89,9 @@ void AddMoney(u32 *arg0, u32 arg1)
 
 void RemoveMoney(u32 *arg0, u32 arg1)
 {
+    if (FlagGet(FLAG_CUSTOM_MONEY_INFINITE) == TRUE) {
+        return;
+    }
     if (*arg0 < arg1)
     {
         *arg0 = 0;

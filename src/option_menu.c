@@ -53,6 +53,10 @@ const OptionData gOptionData[] = {
         .title = "Double Damage",
         .flag = FLAG_CUSTOM_DOUBLE_DAMAGE,
     },
+    {
+        .title = "Infinite Money",
+        .flag = FLAG_CUSTOM_MONEY_INFINITE,
+    },
 };
 
 const u16 gUnknown_0839F5FC[] = INCBIN_U16("graphics/misc/option_menu_text.gbapal");
