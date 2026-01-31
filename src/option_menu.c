@@ -49,6 +49,10 @@ const OptionData gOptionData[] = {
         .title = "God Mode",
         .flag = FLAG_CUSTOM_GOD_MODE,
     },
+    {
+        .title = "Double Damage",
+        .flag = FLAG_CUSTOM_DOUBLE_DAMAGE,
+    },
 };
 
 const u16 gUnknown_0839F5FC[] = INCBIN_U16("graphics/misc/option_menu_text.gbapal");

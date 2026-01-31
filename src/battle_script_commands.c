@@ -1425,7 +1425,9 @@ static void atk05_damagecalc(void)
         gBattleMoveDamage *= 2;
     if (gProtectStructs[gBattlerAttacker].helpingHand)
         gBattleMoveDamage = gBattleMoveDamage * 15 / 10;
-
+    if (FlagGet(FLAG_CUSTOM_DOUBLE_DAMAGE) == TRUE && GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER) {
+        gBattleMoveDamage *= 2;
+    }
     gBattlescriptCurrInstr++;
 }
 
