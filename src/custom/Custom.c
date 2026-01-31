@@ -9,6 +9,8 @@
 #include "overworld.h"
 #include "constants/maps.h"
 #include "main.h"
+#include "item.h"
+#include "constants/items.h"
 
 void SetFlags() {
 
@@ -19,6 +21,7 @@ void SetFlags() {
     FlagSet(FLAG_SYS_POKEMON_GET);
     FlagSet(FLAG_SYS_POKENAV_GET);
     FlagSet(FLAG_CUSTOM_DEBUG_MODE);
+    FlagSet(FLAG_RECEIVED_RUNNING_SHOES);
 
     //Give all badges
     for (tempFlag = FLAG_BADGE01_GET; tempFlag <= FLAG_BADGE08_GET; tempFlag++)

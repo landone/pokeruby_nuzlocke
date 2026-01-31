@@ -11,6 +11,10 @@
 
 #include "event_data.h"
 #include "custom/Custom.h"
+#include "item.h"
+#include "constants/items.h"
+#include "sound.h"
+#include "constants/songs.h"
 
 extern void SetPokemonCryStereo(u32 val);
 
@@ -35,7 +39,14 @@ enum
 #define tOptButtonMode  data[5]
 #define tOptFrameType   data[6]
 
+static void DrawChoices_OnOff(s16 selection, u8 x, u8 y);
+static void ProcessInput_OnOff(u8 taskId, s16 selection);
+static void DrawChoices_Item(s16 itemId, u8 x, u8 y);
+static void ProcessInput_Item(u8 taskId, s16 selection);
+
 typedef struct {
+    void (*drawFunc)(s16, u8, u8);
+    void (*processFunc)(u8, s16);
     u8* title;
     u16 flag;
 } OptionData;
@@ -44,18 +55,32 @@ const OptionData gOptionData[] = {
     {
         .title = "Infinite Repel",
         .flag = FLAG_CUSTOM_REPEL_INFINITE,
+        .drawFunc = DrawChoices_OnOff,
+        .processFunc = ProcessInput_OnOff,
     },
     {
         .title = "God Mode",
         .flag = FLAG_CUSTOM_GOD_MODE,
+        .drawFunc = DrawChoices_OnOff,
+        .processFunc = ProcessInput_OnOff,
     },
     {
         .title = "Double Damage",
         .flag = FLAG_CUSTOM_DOUBLE_DAMAGE,
+        .drawFunc = DrawChoices_OnOff,
+        .processFunc = ProcessInput_OnOff,
     },
     {
         .title = "Infinite Money",
         .flag = FLAG_CUSTOM_MONEY_INFINITE,
+        .drawFunc = DrawChoices_OnOff,
+        .processFunc = ProcessInput_OnOff,
+    },
+    {
+        .title = "Get Item",
+        .flag = 0,
+        .drawFunc = DrawChoices_Item,
+        .processFunc = ProcessInput_Item,
     },
 };
 
@@ -72,7 +97,6 @@ static u8   TextSpeed_ProcessInput(u8 selection);
 static void TextSpeed_DrawChoices(u8 selection);
 static u8   BattleScene_ProcessInput(u8 selection);
 static void BattleScene_DrawChoices(u8 selection, u8 x, u8 y);
-static void DrawChoices_OnOff(u8 selection, u8 x, u8 y);
 static u8   BattleStyle_ProcessInput(u8 selection);
 static void BattleStyle_DrawChoices(u8 selection);
 static u8   Sound_ProcessInput(u8 selection);
@@ -197,10 +221,15 @@ void CB2_InitOptionMenu(void)
         if (FlagGet(FLAG_CUSTOM_DEBUG_MODE) == TRUE) {
             Menu_PrintText(debugOptionTitle,  4,  1);
             for (index = 0; index < ARRAY_COUNT(gOptionData); index++) {
-                gTasks[taskId].data[index + 1] = FlagGet(gOptionData[index].flag);
+                if (gOptionData[index].flag != 0) {
+                    gTasks[taskId].data[index + 1] = FlagGet(gOptionData[index].flag);
+                }
+                else {
+                    gTasks[taskId].data[index + 1] = 1;
+                }
                 FormatAscii(gOptionData[index].title, buffer, sizeof(buffer));
                 Menu_PrintText(buffer, 4, 5 + index * 2);
-                DrawChoices_OnOff(gTasks[taskId].data[index + 1], 15, 5 + index * 2);
+                gOptionData[index].drawFunc(gTasks[taskId].data[index + 1], 15, 5 + index * 2);
             }
             Menu_PrintText(gSystemText_Cancel, 4, 5 + ARRAY_COUNT(gOptionData) * 2);
         }
@@ -257,7 +286,7 @@ static void Task_OptionMenuProcessInput(u8 taskId)
                 gTasks[taskId].func = Task_OptionMenuSave;
         }
     }
-    else if (gMain.newKeys & B_BUTTON)
+    if (gMain.newKeys & B_BUTTON)
     {
         gTasks[taskId].func = Task_OptionMenuSave;
     }
@@ -299,11 +328,8 @@ static void Task_OptionMenuProcessInput(u8 taskId)
         if (FlagGet(FLAG_CUSTOM_DEBUG_MODE) == TRUE) {
             s16 selection = gTasks[taskId].tMenuSelection;
             if (selection >= 0 && selection < ARRAY_COUNT(gOptionData)) {
-                if (gMain.newKeys & DPAD_LEFT || gMain.newKeys & DPAD_RIGHT) {
-                    gTasks[taskId].data[selection + 1] = gTasks[taskId].data[selection + 1] ^ 1;
-                    SetFlag(gOptionData[selection].flag, gTasks[taskId].data[selection + 1]);
-                    DrawChoices_OnOff(gTasks[taskId].data[selection + 1], 15, 5 + selection * 2);
-                }
+                gOptionData[selection].processFunc(taskId, selection);
+                
             }
         }
         else {
@@ -379,8 +405,13 @@ static void DrawOptionMenuChoice(const u8 *text, u8 x, u8 y, u8 style)
 
     for (i = 0; *text != EOS && i < 15; i++)
         dst[i] = *(text++);
-
-    dst[2] = style;
+    if (style != 0) {
+        dst[2] = style;
+    }
+    else {
+        for (; i < 15; i++)
+            dst[i] = 0;
+    }
     dst[i] = EOS;
     Menu_PrintTextPixelCoords(dst, x, y, 1);
 }
@@ -436,7 +467,7 @@ static u8 BattleScene_ProcessInput(u8 selection)
     return selection;
 }
 
-static void DrawChoices_OnOff(u8 selection, u8 x, u8 y) {
+static void DrawChoices_OnOff(s16 selection, u8 x, u8 y) {
     u8 styles[2];
 
     styles[0] = 0xF;
@@ -445,6 +476,53 @@ static void DrawChoices_OnOff(u8 selection, u8 x, u8 y) {
 
     DrawOptionMenuChoice(gSystemText_On,  x*8, y*8, styles[1]);
     DrawOptionMenuChoice(gSystemText_Off, x*8 + 70, y*8, styles[0]);
+}
+
+static void ProcessInput_OnOff(u8 taskId, s16 selection) {
+    if (gMain.newKeys & DPAD_LEFT || gMain.newKeys & DPAD_RIGHT) {
+        gTasks[taskId].data[selection + 1] = gTasks[taskId].data[selection + 1] ^ 1;
+        SetFlag(gOptionData[selection].flag, gTasks[taskId].data[selection + 1]);
+        DrawChoices_OnOff(gTasks[taskId].data[selection + 1], 15, 5 + selection * 2);
+    }
+}
+
+static void DrawChoices_Item(s16 itemId, u8 x, u8 y) {
+    CopyItemName(itemId, gStringVar1);
+    DrawOptionMenuChoice(gStringVar1,  x*8, y*8, 0);
+}
+
+static void ProcessInput_Item_Change_Selection(u8 taskId, s16 selection) {
+    s16 current = gTasks[taskId].data[selection + 1];
+    if (gMain.newKeys & DPAD_LEFT) {
+        if (current <= 1) {
+            gTasks[taskId].data[selection + 1] = ITEMS_COUNT - 1;
+        }
+        else {
+            gTasks[taskId].data[selection + 1] = current - 1;
+        }
+    }
+    else if (gMain.newKeys & DPAD_RIGHT) {
+        if (current == ITEMS_COUNT - 1) {
+            gTasks[taskId].data[selection + 1] = 1;
+        }
+        else {
+            gTasks[taskId].data[selection + 1] = current + 1;
+        }
+    }
+}
+
+static void ProcessInput_Item(u8 taskId, s16 selection) {
+    if (gMain.newKeys & (DPAD_LEFT | DPAD_RIGHT)) {
+        do {
+            ProcessInput_Item_Change_Selection(taskId, selection);
+            CopyItemName(gTasks[taskId].data[selection + 1], gStringVar1);
+        } while (gStringVar1[0] == 0xAC); // Skip blank items
+    }
+    else if (gMain.newKeys & A_BUTTON) {
+        AddBagItem(gTasks[taskId].data[selection + 1], 1);
+        PlaySE(SE_SAVE);
+    }
+    DrawChoices_Item(gTasks[taskId].data[selection + 1], 15, 5 + selection * 2);
 }
 
 static u8 BattleStyle_ProcessInput(u8 selection)
