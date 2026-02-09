@@ -31,6 +31,8 @@
 
 #include "event_data.h"
 
+#include "nuzlocke/nuzlocke.h"
+
 // TODO: put this into battle_controllers.h
 
 #define RET_VALUE_LEVELLED_UP   11

@@ -40,6 +40,8 @@
 #include "constants/species.h"
 #include "constants/vars.h"
 
+#include "nuzlocke/nuzlocke.h"
+
 extern void (*gFieldItemUseCallback)(u8);
 extern void (*gFieldCallback)(void);
 extern void (*gPokemonItemUseCallback)(u8, u16, TaskFunc);
@@ -875,6 +877,12 @@ void ItemUseOutOfBattle_EvolutionStone(u8 taskId)
 
 void ItemUseInBattle_PokeBall(u8 taskId)
 {
+
+    if (nuzlocke_can_catch_mon_here() == FALSE) {
+        nuzlocke_display_message(taskId, NUZ_MSG_CANT_CATCH);
+        return;
+    }
+
     if (PlayerPartyAndPokemonStorageFull() == FALSE) // have room for mon?
     {
         RemoveBagItem(gSpecialVar_ItemId, 1);

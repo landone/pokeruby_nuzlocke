@@ -49,6 +49,8 @@
 #include "ewram.h"
 #include "battle_string_ids.h"
 
+#include "nuzlocke/nuzlocke.h"
+
 struct UnknownStruct7
 {
     u8 unk0;
@@ -5027,6 +5029,10 @@ void HandleEndTurn_MonFled(void)
 
 void HandleEndTurn_FinishBattle(void)
 {
+    if (gBattleTypeFlags & BATTLE_TYPE_WILD) {
+        nuzlocke_set_mon_encounter_here();
+    }
+
     if (gCurrentActionFuncId == 0xB || gCurrentActionFuncId == 0xC)
     {
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK

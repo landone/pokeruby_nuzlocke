@@ -51,10 +51,7 @@ void OnNewGame() {
     const char* playerName = "Wan!";
     SetFlags();
     FormatAscii(playerName, gSaveBlock2.playerName, 7);
-    GiveMon(SPECIES_ZAPDOS, 60, GiveFly);
-    GiveMon(SPECIES_ARTICUNO, 60, GiveWaterHMs);
-    GiveMon(SPECIES_MOLTRES, 60, GiveFlash);
-    GiveMon(SPECIES_LUGIA, 60, GivePhysicalHMs);
+    GiveMon(SPECIES_LOMBRE, 60, GiveFly);
 
     /*Overworld_SetWarpDestination(MAP_GROUP(MAP_ABANDONED_SHIP_CAPTAINS_OFFICE), MAP_NUM(MAP_ABANDONED_SHIP_CAPTAINS_OFFICE), -1, -1, -1);
     WarpIntoMap();

@@ -44,6 +44,7 @@ SECTIONS {
         src/main.o(.text);
 
         src/custom/Custom.o(.text);
+        src/nuzlocke/nuzlocke.o(.text);
 
         src/sprite.o(.text);
         src/text.o(.text);
@@ -473,6 +474,7 @@ SECTIONS {
         src/main.o(.rodata);
 
         src/custom/Custom.o(.rodata);
+        src/nuzlocke/nuzlocke.o(.rodata);
 
         src/sprite.o(.rodata);
         . += 0x8; /* Why the gap? */
