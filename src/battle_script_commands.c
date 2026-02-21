@@ -9522,6 +9522,7 @@ static void atkF0_givecaughtmon(void)
     GiveMonToPlayer(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ 1]]);
     gBattleResults.caughtPoke = gBattleMons[gBattlerAttacker ^ 1].species;
     GetMonData(&gEnemyParty[gBattlerPartyIndexes[gBattlerAttacker ^ 1]], MON_DATA_NICKNAME, gBattleResults.caughtNick);
+    nuzlocke_set_mon_encounter_here();
     gBattlescriptCurrInstr++;
 }
 
