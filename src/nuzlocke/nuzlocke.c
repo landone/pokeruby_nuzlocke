@@ -8,6 +8,7 @@
 #include "custom/Custom.h"
 
 static bool8 caught_map[MAP_GROUPS_COUNT][128/8];
+static bool8 last_battler_fainted;
 extern void CleanUpItemMenuMessage(u8 taskId);
 
 const u8 cant_catch_str[] = _("Can not use this here.\nIt's not the first Pokémon encounter\nin this area!");
@@ -48,4 +49,12 @@ void nuzlocke_set_mon_encounter_here() {
     s8 map_num_bit = map_num % 8;
     caught_map[map_group][map_num_index] |= (1 << map_num_bit);
 
+}
+
+bool8 nuzlocke_last_battler_fainted() {
+    return last_battler_fainted;
+}
+
+void nuzlocke_set_last_battler_fainted(bool8 val) {
+    last_battler_fainted = val;
 }

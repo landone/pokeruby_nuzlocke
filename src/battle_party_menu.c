@@ -20,6 +20,8 @@
 #include "text.h"
 #include "ewram.h"
 
+#include "nuzlocke/nuzlocke.h"
+
 EWRAM_DATA u8 gBattlePartyCurrentOrder[3] = {};
 EWRAM_DATA u8 gUnknown_02038473 = 0;
 
@@ -666,18 +668,23 @@ static void Task_BattlePartyMenuShift(u8 taskId)
         gTasks[taskId].func = Task_80954C0;
         return;
     }
-    for (i = 0; i < gBattlersCount; i++)
-    {
-        if (GetBattlerSide(i) == 0
-         && sub_8094C20(partySelection) == gBattlerPartyIndexes[i])
+    if (nuzlocke_last_battler_fainted() == FALSE) {
+        for (i = 0; i < gBattlersCount; i++)
         {
-            PartyMenuEraseMsgBoxAndFrame();
-            GetMonNickname(&gPlayerParty[partySelection], gStringVar1);
-            StringExpandPlaceholders(gStringVar4, gOtherText_AlreadyBattle);
-            DisplayPartyMenuMessage(gStringVar4, 0);
-            gTasks[taskId].func = Task_80954C0;
-            return;
+            if (GetBattlerSide(i) == 0
+            && sub_8094C20(partySelection) == gBattlerPartyIndexes[i])
+            {
+                PartyMenuEraseMsgBoxAndFrame();
+                GetMonNickname(&gPlayerParty[partySelection], gStringVar1);
+                StringExpandPlaceholders(gStringVar4, gOtherText_AlreadyBattle);
+                DisplayPartyMenuMessage(gStringVar4, 0);
+                gTasks[taskId].func = Task_80954C0;
+                return;
+            }
         }
+    }
+    else {
+        nuzlocke_set_last_battler_fainted(FALSE);
     }
     if (GetMonData(&gPlayerParty[partySelection], MON_DATA_IS_EGG))
     {

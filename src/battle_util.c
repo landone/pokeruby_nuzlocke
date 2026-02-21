@@ -24,6 +24,9 @@
 #include "constants/species.h"
 #include "constants/weather.h"
 
+#include "custom/Custom.h"
+#include "nuzlocke/nuzlocke.h"
+
 extern u8 gUnknown_02023A14_50;
 
 extern const u8* gBattlescriptCurrInstr;
@@ -1330,6 +1333,12 @@ bool8 HandleFaintedMonActions(void)
                 {
                     BattleScriptExecute(BattleScript_HandleFaintedMon);
                     gBattleStruct->faintedActionsState = 5;
+                    if (GetBattlerSide(gBattleStruct->faintedActionsBattlerId) == B_SIDE_PLAYER) {
+                        struct Pokemon* mon = &gPlayerParty[gBattlerPartyIndexes[gBattleStruct->faintedActionsBattlerId]];
+                        DeleteMon(mon);
+                        nuzlocke_set_last_battler_fainted(TRUE);
+                    }
+                    
                     return 1;
                 }
             } while (++gBattleStruct->faintedActionsBattlerId != gBattlersCount);

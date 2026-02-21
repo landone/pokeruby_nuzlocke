@@ -7,6 +7,7 @@
 void OnNewGame();
 
 void GiveMon(u16 species, u8 level, void(*MonConstructor)(struct Pokemon*));
+void DeleteMon(struct Pokemon* mon);
 
 void AddToPokedex(u16 species);
 

@@ -11,6 +11,8 @@
 #include "main.h"
 #include "item.h"
 #include "constants/items.h"
+#include "pokemon_storage_system.h"
+#include "pokemon.h"
 
 void SetFlags() {
 
@@ -38,6 +40,7 @@ void GiveWaterHMs(struct Pokemon* mon) {
     SetMonMoveSlot(mon, MOVE_SURF, 0);
     SetMonMoveSlot(mon, MOVE_WATERFALL, 1);
     SetMonMoveSlot(mon, MOVE_DIVE, 2);
+    SetMonMoveSlot(mon, MOVE_LEER, 2);
 }
 void GiveFlash(struct Pokemon* mon) { SetMonMoveSlot(mon, MOVE_FLASH, 0); }
 void GivePhysicalHMs(struct Pokemon* mon) {
@@ -51,6 +54,7 @@ void OnNewGame() {
     const char* playerName = "Wan!";
     SetFlags();
     FormatAscii(playerName, gSaveBlock2.playerName, 7);
+    GiveMon(SPECIES_SUDOWOODO, 1, GiveWaterHMs);
     GiveMon(SPECIES_LOMBRE, 60, GiveFly);
 
     /*Overworld_SetWarpDestination(MAP_GROUP(MAP_ABANDONED_SHIP_CAPTAINS_OFFICE), MAP_NUM(MAP_ABANDONED_SHIP_CAPTAINS_OFFICE), -1, -1, -1);
@@ -71,6 +75,14 @@ void GiveMon(u16 species, u8 level, void(*MonConstructor)(struct Pokemon*)) {
     GiveMonToPlayer(&mon);
 
     AddToPokedex(species);
+
+}
+
+void DeleteMon(struct Pokemon* mon) {
+
+    ZeroMonData(mon);
+    party_compaction();
+    CalculatePlayerPartyCount();
 
 }
 
